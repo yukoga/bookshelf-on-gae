@@ -1,0 +1,33 @@
+{# [START form] #}
+{% extends "base.html" %}
+
+{% block content %}
+<h3>{{action}} book</h3>
+
+<form method="POST" enctype="multipart/form-data">
+
+  <div class="form-group">
+    <label for="title">Title - 本のタイトル</label>
+    <input type="text" name="title" id="title" value="{{book.title}}" class="form-control"/>
+  </div>
+
+  <div class="form-group">
+    <label for="author">Author - 著者</label>
+    <input type="text" name="author" id="author" value="{{book.author}}" class="form-control"/>
+  </div>
+
+  <div class="form-group">
+    <label for="publishedDate">Date Published - 出版日</label>
+    <input type="text" name="publishedDate" id="publishedDate" value="{{book.publishedDate}}" class="form-control"/>
+  </div>
+
+  <div class="form-group">
+    <label for="description">Description - 詳細</label>
+    <textarea name="description" id="description" class="form-control">{{book.description}}</textarea>
+  </div>
+
+  <button type="submit" class="btn btn-success">Save - 保存する</button>
+</form>
+
+{% endblock %}
+{# [END form] #}

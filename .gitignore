@@ -35,3 +35,4 @@ lib/
 .git/
 .project
 .pydevproject
+.settings/

@@ -1,8 +1,6 @@
-application: bookshelf-sample-001
-version: 1
 runtime: python
-api_version: 1
+vm: true
+entrypoint: gunicorn -b :$PORT main:app
 
-handlers:
-- url: /.*
-  script: helloworld.py
+runtime_config:
+	python_version: 2
