@@ -2,7 +2,6 @@
 
 import logging
 from flask import current_app, Flask, redirect, url_for
-# from docker.tests.test import url_prefix
 
 
 def create_app(config, debug=False, testing=False, config_overrides=None):
@@ -23,7 +22,7 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         model.init_app(app)
        
     
-    from . import crud
+    from .crud import crud
     app.register_blueprint(crud, url_prefix="/books")
 
 
@@ -47,31 +46,8 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
 def get_model():
     model_backend = current_app.config["DATA_BACKEND"]
     if model_backend == "datastore":
-        try:
-            from . import model_datastore
-            model = model_datastore
-            return model
-        except(Exception):
-#            print("Failed to import model_datastore. {}".format(Exception.message))
-            raise ValueError("Failed to import model_datastore. {}".format(Exception.message))
+        from . import model_datastore
+        model = model_datastore
+        return model
     else:
         raise ValueError("No appropriate databackend configured.")
-#    model_backend = current_app.config["DATA_BACKEND"]
-#    if model_backend == "cloudsql":
-#        from . import model_cloudsql
-#        model = model_cloudsql
-#    elif model_backend == "datastore":
-#        from . import model_datastore
-#        model = model_datastore
-#    elif model_backend == "mongodb":
-#        from . import model_mongodb
-#        model = model_mongodb
-#    else:
-#        raise ValueError(
-#                         "No appropriate databackend configured."
-#                         "Please specify datastore, cloudsql or mongodb"
-#                         )
-        
-#    return model
-"""    
-"""

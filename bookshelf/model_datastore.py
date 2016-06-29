@@ -8,7 +8,7 @@ builtin_list = list
 
 
 def init_app(app):
-    app
+    pass
     
     
 def get_client():
@@ -57,8 +57,7 @@ def update(data, id=None):
     else:
         key = ds.key("Book")
         
-    entity = datastore.Entity(key=key, 
-                              exclude_from_indexes=["description"])
+    entity = datastore.Entity(key=key, exclude_from_indexes=["description"])
     
     entity.update(data)
     ds.put(entity)

@@ -14,9 +14,8 @@ def list():
         
     books, next_page_token = get_model().list(cursor=token)
     
-    return render_template("list.html",
-                           books=books,
-                           next_page_token=next_page_token)
+    return render_template("list.html", books=books, next_page_token=next_page_token)
+
 
 @crud.route("/<id>")
 def view(id):
