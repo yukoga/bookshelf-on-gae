@@ -22,3 +22,32 @@ def view(id):
     book = get_model().read(id)
     return render_template("view.html", book=book)
 
+
+@crud.route("/add", methods=["GET", "POST"])
+def add():
+    if request.method == "POST":
+        data = request.form.to_dict(flat=True)        
+        book = get_model().create(data)
+        
+        return redirect(url_for(".view", id=book["id"]))
+    
+    return render_template("form.html", action="Add", book={})
+
+
+@crud.route("/<id>/edit", methods=["GET", "POST"])
+def edit(id):
+    book = get_model().read(id)
+    
+    if request.method == "POST":
+        data = request.form.to_dict(flat=True)
+        book = get_model().update(data, id)
+        
+        return redirect(url_for(".view", id=book["id"]))
+    
+    return render_template("form.html", action="Edit", book=book)
+
+
+@crud.route("/<id>/delete")
+def delete(id):
+    get_model().delete(id)
+    return redirect(url_for(".list"))
