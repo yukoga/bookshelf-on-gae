@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3>Books - 本</h3>
+<a href="/books/add" class="btn btn-success btn-sm">
+  <i class="glyphicon glyphicon-plus"></i>
+  Add book - 本を追加する
+</a>
+
+{% for book in books %}
+<div class="media">
+  <a href="/books/{{book.id}}">
+    <div class="media-left">
+      <img src="http://placekitten.com/g/128/192">
+    </div>
+    <div class="media-body">
+      <h4>{{book.title}}</h4>
+      <p>{{book.author}}</p>
+    </div>
+  </a>
+</div>
+{% else %}
+<p>No books found - 該当する本がありませんでした。</p>
+{% endfor %}
+
+{% if next_page_token %}
+<nav>
+  <ul class="pager">
+    <li><a href="?page_token={{next_page_token}}">More - 次を見る</a></li>
+  </ul>
+</nav>
+{% endif %}
+
+{% endblock %}

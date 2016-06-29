@@ -18,10 +18,19 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
     if not app.testing:
         logging.basicConfig(level=logging.INFO)
 
+    with app.app_context():
+        model = get_model()
+        model.init_app(app)
+       
+    
+    from . import crud
+    app.register_blueprint(crud, url_prefix="/books")
+
+
     @app.route("/")
     def index():
-     #   return redirect(url_for("crud.list"))
-        return "Hello world, Hello Flask, 日本語はどうかな？"
+        return redirect(url_for("crud.list"))
+    #    return "Hello world, Hello Flask, 日本語はどうかな？"
     
     
     @app.errorhandler(500)
@@ -34,34 +43,35 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         
     return app
 
-"""
-    with app.app_context():
-        model = get_model()
-        model.init_app(app)
-       
     
-    from .crud import crud
-    app.register_blueprint(crud, url_prefix="/books")
-"""
-
-    
-"""    
 def get_model():
     model_backend = current_app.config["DATA_BACKEND"]
-    if model_backend == "cloudsql":
-        from . import model_cloudsql
-        model = model_cloudsql
-    elif model_backend == "datastore":
-        from . import model_datastore
-        model = model_datastore
-    elif model_backend == "mongodb":
-        from . import model_mongodb
-        model = model_mongodb
+    if model_backend == "datastore":
+        try:
+            from . import model_datastore
+            model = model_datastore
+            return model
+        except(Exception):
+#            print("Failed to import model_datastore. {}".format(Exception.message))
+            raise ValueError("Failed to import model_datastore. {}".format(Exception.message))
     else:
-        raise ValueError(
-                         "No appropriate databackend configured."
-                         "Please specify datastore, cloudsql or mongodb"
-                         )
+        raise ValueError("No appropriate databackend configured.")
+#    model_backend = current_app.config["DATA_BACKEND"]
+#    if model_backend == "cloudsql":
+#        from . import model_cloudsql
+#        model = model_cloudsql
+#    elif model_backend == "datastore":
+#        from . import model_datastore
+#        model = model_datastore
+#    elif model_backend == "mongodb":
+#        from . import model_mongodb
+#        model = model_mongodb
+#    else:
+#        raise ValueError(
+#                         "No appropriate databackend configured."
+#                         "Please specify datastore, cloudsql or mongodb"
+#                         )
         
-    return model
+#    return model
+"""    
 """
