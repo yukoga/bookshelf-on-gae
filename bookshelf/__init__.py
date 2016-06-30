@@ -20,8 +20,7 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
     with app.app_context():
         model = get_model()
         model.init_app(app)
-       
-    
+
     from .crud import crud
     app.register_blueprint(crud, url_prefix="/books")
 
@@ -31,6 +30,12 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
         return redirect(url_for("crud.list"))
     #    return "Hello world, Hello Flask, 日本語はどうかな？"
     
+    @app.errorhandler(404)
+    def not_found_error(e):
+        return """
+        The URL you accessed is not found in this website. 
+        Please check the URL in your address bar and try again. <pre>{}</pre>
+        """.format(e), 404
     
     @app.errorhandler(500)
     def server_error(e):

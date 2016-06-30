@@ -1,7 +1,7 @@
 # *-* coding: utf-8 -*- 
 
 from bookshelf import get_model
-from flask import Blueprint, redirect, render_template, request, url_for
+from flask import Blueprint, redirect, render_template, request, url_for, abort
 
 
 crud = Blueprint("crud", __name__)
@@ -20,6 +20,8 @@ def list():
 @crud.route("/<id>")
 def view(id):
     book = get_model().read(id)
+    if not book:
+        abort(404)
     return render_template("view.html", book=book)
 
 
