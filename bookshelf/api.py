@@ -1,7 +1,7 @@
 # *-* coding: utf-8 -*-
 
 from bookshelf import get_model
-from flask import Blueprint, render_template, request, abort, jsonify
+from flask import Blueprint, request, abort, jsonify
 
 
 api = Blueprint('api', __name__)
