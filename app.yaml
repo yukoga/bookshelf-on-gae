@@ -1,6 +1,9 @@
-runtime: python
-vm: true
-entrypoint: gunicorn -b :$PORT main:app
+application: gcp-jp
+version: v1-5
+runtime: python27
+api_version: 1
+threadsafe: true
 
-runtime_config:
-    python_version: 2
+handlers:
+    - url: /.*
+      script: main.app
