@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
 import pandas as pd
 from .abstract_dataset import AbstractDataset
 try:
@@ -9,16 +8,6 @@ except ImportError:
     from urllib.parse import quote
 
 _BASE_URL = 'http://files.grouplens.org/datasets/movielens/ml-100k%s'
-_SELECTED_TABLES = ['data', 'item', 'user']
-_SELECTED_FEATURES = {'data': ['user_id', 'item_id', 'rating', 'timestamp'],
-                      'item': ['release-date', 'video-release-date', 'action',
-                               'adventure', 'animation', 'children', 'comedy',
-                               'crime', 'documentary', 'drama', 'fantasy',
-                               'film-noir', 'horror', 'musical', 'mystery',
-                               'romance', 'sci-fi', 'thriller',
-                               'war', 'western'],
-                      'user': ['age', 'gender', 'occupation', 'zip_code']
-                      }
 
 _DATA_STRUCTURE = {'ratings': {'filename': '/u.data',
                                'sep': '\t',
@@ -42,32 +31,22 @@ _DATA_STRUCTURE = {'ratings': {'filename': '/u.data',
 class MovieLens(AbstractDataset):
 
     def __init__(self):
-        self.__ratings = None
-        self.__users = None
-        self.__items = None
+        self.ratings = None
+        self.users = None
+        self.items = None
+        self.features = None
+        self.__target = None
 
     def fetch_data(self, query=None):
-        self.__ratings = self.fetch_table_data('ratings')
-        self.__users = self.fetch_table_data('users')
-        self.__items = self.fetch_table_data('items')
-        features = self.__join_data(self.__ratings, self.__users, 'user_id')
-        features = self.__join_data(features, self.__items, 'item_id')
+        self.ratings = self.fetch_table_data('ratings')
+        self.users = self.fetch_table_data('users')
+        self.items = self.fetch_table_data('items')
+        features = self.__join_data(self.ratings, self.users, 'user_id')
+        features = self.__join_data(features, self.items, 'item_id')
         target = features['rating']
         del features['rating']
-        data = {}
-        data['features'] = features
-        data['target'] = target
-
-        return data
-
-#    def define_tables(self, tables=None):
-#        if tables is None:
-#            tables = _SELECTED_TABLES
-
-#        return tables
-
-#    def define_features(self, features=None, prefix=None, sep=None):
-#        pass
+        self.features = features
+        self.__target = target
 
     def fetch_table_data(self, table=None):
         if table is None or isinstance(table, str) is False or len(table) is 0:
@@ -83,19 +62,6 @@ class MovieLens(AbstractDataset):
         __df.columns = __features
 
         return __df
-
-#    def __create_data_dir(self, path='./data', recreate_if_exist=False):
-#        try:
-#            if not os.path.isdir(path):
-#                os.mkdir(path)
-#                return path
-#            else:
-#                if recreate_if_exist:
-#                    os.rmdir(path)
-#                    os.mkdir(path)
-#                return path
-#        except IOError:
-#            raise Exception('Failed to create data dir.')
 
     def __join_data(self, left_df=None, right_df=None, join_key=None):
         if all([isinstance(df, pd.DataFrame)

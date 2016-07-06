@@ -25,45 +25,21 @@ age | gender | occupation | zip code.
 """
 
 
-def _generate_tempdir_path(suffix="", prefix="tmp", dir=None):
-    if dir is None:
-        dir = tempfile.gettempdir()
-
-    names = tempfile._get_candidate_names()
-
-    for seq in range(100):
-        name = names.next()
-        path = os.path.join(dir, prefix + name + suffix)
-        if not os.path.isdir(path):
-            return path
-        else:
-            Exception('All temp dir name candidates exist. Try again.')
-
-
-@pytest.fixture(scope='session')
-def data_dir():
-    return _generate_tempdir_path(prefix='recommend-of-')
-#    return tempfile.mkdtemp(prefix="recommend-of-")
-
-
 @pytest.fixture
-def data(data_dir):
+def data():
     try:
         ml = MovieLens()
-        print(data_dir)
-        data = ml.fetch_data()
-        print(data['features'].head())
-        print(data['target'].head())
-        return data
-    except IOError:
+        ml.fetch_data()
+        return ml
+    except:
         raise Exception('Failed to fetch movielens data.')
 
 
 def test_movielens_shape_consistency(data):
     # check if data type is correct.
-    assert isinstance(data, dict)
-    assert isinstance(data['features'], pd.DataFrame)
-    assert isinstance(data['target'], pd.Series)
+    assert isinstance(data, MovieLens)
+    assert isinstance(data.features, pd.DataFrame)
+    assert isinstance(data.target, pd.Series)
 
 
 def test_movielens_length_consistency(data):
@@ -71,3 +47,20 @@ def test_movielens_length_consistency(data):
     assert len(data['features']) == NUM_RECORDS
     assert len(data['target']) == NUM_RECORDS
     assert len(data['features'].T) == NUM_FEATURES
+
+
+def test_movielens_info_check(data):
+    info = pd.DataFrame.from_csv(
+        path='http://files.grouplens.org/datasets/movielens/ml-100k/u.info',
+        sep=' ',
+        header=None,
+        index_col=None)
+    info.columns = ['num_records', 'dataset']
+    __NUM_RECORDS = info['num_records'][2]
+    assert len(data['features']) == __NUM_RECORDS
+    assert len(data['target']) == __NUM_RECORDS
+    assert len(data['features'].T) == NUM_FEATURES
+
+
+def test_movielens_data_summary(data):
+    assert 0
