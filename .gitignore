@@ -36,3 +36,4 @@ lib/
 .project
 .pydevproject
 .settings/
+.idea/
