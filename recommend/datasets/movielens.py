@@ -35,7 +35,7 @@ class MovieLens(AbstractDataset):
         self.users = None
         self.items = None
         self.features = None
-        self.__target = None
+        self.target = None
 
     def fetch_data(self, query=None):
         self.ratings = self.fetch_table_data('ratings')
@@ -46,7 +46,7 @@ class MovieLens(AbstractDataset):
         target = features['rating']
         del features['rating']
         self.features = features
-        self.__target = target
+        self.target = target
 
     def fetch_table_data(self, table=None):
         if table is None or isinstance(table, str) is False or len(table) is 0:

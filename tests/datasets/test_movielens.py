@@ -44,9 +44,9 @@ def test_movielens_shape_consistency(data):
 
 def test_movielens_length_consistency(data):
     # check if data volume is correct.
-    assert len(data['features']) == NUM_RECORDS
-    assert len(data['target']) == NUM_RECORDS
-    assert len(data['features'].T) == NUM_FEATURES
+    assert len(data.features) == NUM_RECORDS
+    assert len(data.target) == NUM_RECORDS
+    assert len(data.features.T) == NUM_FEATURES
 
 
 def test_movielens_info_check(data):
@@ -57,9 +57,9 @@ def test_movielens_info_check(data):
         index_col=None)
     info.columns = ['num_records', 'dataset']
     __NUM_RECORDS = info['num_records'][2]
-    assert len(data['features']) == __NUM_RECORDS
-    assert len(data['target']) == __NUM_RECORDS
-    assert len(data['features'].T) == NUM_FEATURES
+    assert len(data.features) == NUM_RECORDS
+    assert len(data.target) == NUM_RECORDS
+    assert len(data.features.T) == NUM_FEATURES
 
 
 def test_movielens_data_summary(data):
