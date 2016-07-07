@@ -1,6 +1,5 @@
 tox
 flake8
-flaky
 pytest
 pytest-flask
 pytest-cov
