@@ -61,7 +61,6 @@ def test_movielens_info_check(data):
 
 
 def test_movielens_data_summary(data):
-    # TODO: add test case for checking data summry consistency.
     summary_mean = np.array([4.62484750e+02, 4.25530130e+02, 3.52986000e+00,
                              8.83528851e+08, 3.29698500e+01, 0.00000000e+00,
                              1.00000000e-04, 2.55890000e-01, 1.37530000e-01,
