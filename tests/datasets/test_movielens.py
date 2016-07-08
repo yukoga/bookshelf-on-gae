@@ -5,21 +5,6 @@ import pandas as pd
 import pytest
 from recommend.datasets.movielens import MovieLens
 
-num_features = 30
-"""
-num_features : number of meaningful features.
-The output data which MovieLens class contains is
-joined u.data and u.item, u.user by each ids.
-Also the data includes only meaningful features as follows:
-user id | item id | rating | timestamp |
-release date | video release date |
-Action | Adventure | Animation |
-Children's | Comedy | Crime | Documentary | Drama | Fantasy |
-Film-Noir | Horror | Musical | Mystery | Romance | Sci-Fi |
-Thriller | War | Western |
-age | gender | occupation | zip code.
-"""
-
 
 @pytest.fixture
 def data():
