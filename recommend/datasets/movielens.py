@@ -36,6 +36,7 @@ class MovieLens(AbstractDataset):
         self.items = None
         self.features = None
         self.target = None
+        self.total = None
 
     def fetch_data(self, query=None):
         self.ratings = self.fetch_table_data('ratings')
@@ -43,6 +44,7 @@ class MovieLens(AbstractDataset):
         self.items = self.fetch_table_data('items')
         features = self.__join_data(self.ratings, self.users, 'user_id')
         features = self.__join_data(features, self.items, 'item_id')
+        self.total = features.copy()
         target = features['rating']
         del features['rating']
         self.features = features
