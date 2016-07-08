@@ -5,11 +5,9 @@ import pandas as pd
 import pytest
 from recommend.datasets.movielens import MovieLens
 
-DATASOURCE_URL = ""
-NUM_RECORDS = 100000
-NUM_FEATURES = 30
+num_features = 30
 """
-NUM_FEATURES : number of meaningful features.
+num_features : number of meaningful features.
 The output data which MovieLens class contains is
 joined u.data and u.item, u.user by each ids.
 Also the data includes only meaningful features as follows:
@@ -33,31 +31,41 @@ def data():
         raise Exception('Failed to fetch movielens data.')
 
 
-def test_movielens_shape_consistency(data):
+def test_movielens_instantiation(data):
     # check if data type is correct.
     assert isinstance(data, MovieLens)
     assert isinstance(data.features, pd.DataFrame)
     assert isinstance(data.target, pd.Series)
 
 
-def test_movielens_length_consistency(data):
-    # check if data volume is correct.
-    assert len(data.features) == NUM_RECORDS
-    assert len(data.target) == NUM_RECORDS
-    assert len(data.features.T) == NUM_FEATURES
-
-
-def test_movielens_info_check(data):
+def test_movielens_data_shape(data):
     info = pd.DataFrame.from_csv(
         path='http://files.grouplens.org/datasets/movielens/ml-100k/u.info',
         sep=' ',
         header=None,
         index_col=None)
+    __ratings = pd.DataFrame.from_csv(
+        path='http://files.grouplens.org/datasets/movielens/ml-100k/u.data',
+        sep='\t',
+        header=None,
+        index_col=None)
+    __user = pd.DataFrame.from_csv(
+        path='http://files.grouplens.org/datasets/movielens/ml-100k/u.user',
+        sep='|',
+        header=None,
+        index_col=None)
+    __item = pd.DataFrame.from_csv(
+        path='http://files.grouplens.org/datasets/movielens/ml-100k/u.item',
+        sep='|',
+        header=None,
+        index_col=None)
     info.columns = ['num_records', 'dataset']
-    __NUM_RECORDS = info['num_records'][2]
-    assert len(data.features) == NUM_RECORDS
-    assert len(data.target) == NUM_RECORDS
-    assert len(data.features.T) == NUM_FEATURES
+    num_features = len(__ratings.columns) + \
+        len(__user.columns) + len(__item.columns) - 3
+    num_records = info['num_records'][2]
+    assert len(data.features) == num_records
+    assert len(data.target) == num_records
+    assert len(data.features.T) == num_features
 
 
 def test_movielens_data_summary(data):
