@@ -7,15 +7,15 @@ try:
 except ImportError:
     from urllib.parse import quote
 
-_BASE_URL = 'http://files.grouplens.org/datasets/movielens/ml-100k%s'
+_BASE_URL = 'http://files.grouplens.org/datasets/movielens/ml-100k/%s'
 
-_DATA_STRUCTURE = {'ratings': {'filename': '/u.data',
+_DATA_STRUCTURE = {'ratings': {'filename': ['u.data', 'u1.base', 'u1.test', 'u2.base', 'u2.test', 'u3.base', 'u3.test', 'u4.base', 'u4.test', 'u5.base', 'u5.test', 'ua.base', 'ua.test', 'ub.base', 'ub.test'],
                                'sep': '\t',
                                'features': ['user_id', 'item_id', 'rating', 'timestamp']},
-                   'users': {'filename': '/u.user',
+                   'users': {'filename': ['u.user'],
                              'sep': '|',
                              'features': ['user_id', 'age', 'gender', 'occupation', 'zip-code']},
-                   'items': {'filename': '/u.item',
+                   'items': {'filename': ['u.item'],
                              'sep': '|',
                              'features': ['item_id', 'movie-title', 'release-date',
                                           'video-release-date', 'imdb-url', 'unknown',
@@ -39,9 +39,9 @@ class MovieLens(AbstractDataset):
         self.total = None
 
     def fetch_data(self, query=None):
-        self.ratings = self.fetch_table_data('ratings')
-        self.users = self.fetch_table_data('users')
-        self.items = self.fetch_table_data('items')
+        self.ratings = self.fetch_table_data('ratings', 'u.data')
+        self.users = self.fetch_table_data('users', 'u.user')
+        self.items = self.fetch_table_data('items', 'u.item')
         features = self.__join_data(self.ratings, self.users, 'user_id')
         features = self.__join_data(features, self.items, 'item_id')
         self.total = features.copy()
@@ -50,13 +50,17 @@ class MovieLens(AbstractDataset):
         self.features = features
         self.target = target
 
-    def fetch_table_data(self, table=None):
-        if table is None or isinstance(table, str) is False or len(table) is 0:
+    def fetch_table_data(self, table_name=None, file_name=None):
+        if table_name is None or isinstance(table_name, str) is False or len(table_name) is 0:
             raise ValueError('Table data is needed to be set.')
         else:
-            __filename = _DATA_STRUCTURE[table]['filename']
-            __sep = _DATA_STRUCTURE[table]['sep']
-            __features = _DATA_STRUCTURE[table]['features']
+            __files = _DATA_STRUCTURE[table_name]['filename']
+            if file_name in __files:
+                __filename = __files[__files.index(file_name)]
+            else:
+                raise ValueError('Your specified file does not exist in the list. ')
+            __sep = _DATA_STRUCTURE[table_name]['sep']
+            __features = _DATA_STRUCTURE[table_name]['features']
 
         __url = _BASE_URL % quote(__filename)
         __df = pd.DataFrame.from_csv(

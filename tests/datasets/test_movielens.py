@@ -6,6 +6,7 @@ import pytest
 from recommend.datasets.movielens import MovieLens
 from warnings import warn
 
+
 @pytest.fixture
 def data():
     try:

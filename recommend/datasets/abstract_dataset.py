@@ -18,14 +18,6 @@ class AbstractDataset(BaseAbstract):
     def fetch_data(self, query=None):
         pass
 
-#    @abstractmethod
-#    def define_features(self, features=None):
-#        pass
-
-#    @abstractmethod
-#    def define_tables(self, tables=None):
-#        pass
-
     @abstractmethod
-    def fetch_table_data(self, table=None):
+    def fetch_table_data(self, table_name=None, file_name=None):
         pass
