@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 from recommend.datasets.movielens import MovieLens
-
+from warnings import warn
 
 @pytest.fixture
 def data():
@@ -12,8 +12,8 @@ def data():
         ml = MovieLens()
         ml.fetch_data()
         return ml
-    except:
-        raise Exception('Failed to fetch movielens data.')
+    except Exception:
+        warn('Failed to fetch movielens data. {}'.format(Exception.message))
 
 
 def test_movielens_instantiation(data):
