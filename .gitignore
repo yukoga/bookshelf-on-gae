@@ -36,3 +36,5 @@ lib/
 .pydevproject
 .settings/
 .idea/
+
+.ipynb_checkpoints/
