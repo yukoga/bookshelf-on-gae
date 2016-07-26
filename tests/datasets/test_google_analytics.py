@@ -10,11 +10,19 @@ from warnings import warn
 @pytest.fixture
 def data():
     try:
-        ga = GoogleAnalytics()
+        params = {}
+        params['api_name'] = 'analyticsreporting'
+        params['api_version'] = 'v4'
+        params['scope'] = 'https://www.googleapis.com/auth/analytics.readonly'
+        params['service_account_email'] = \
+            'yukoga-analytics-api@gcp-jp.iam.gserviceaccount.com'
+        params['key_file_location'] = './gcp-jp.p12'
+        ga = GoogleAnalytics(params=params)
         ga.fetch_data()
         return ga
     except Exception:
-        warn('Failed to fetch Google Analytics data. {}'.format(Exception.message))
+        warn('Failed to fetch Google Analytics data. {}'
+             .format(Exception.message))
 
 
 def test_googleanalytics_instantiation(data):
@@ -26,14 +34,17 @@ def test_googleanalytics_instantiation(data):
 
 
 def test_googleanalytics_data_shape(data):
-    num_columns = 4 # ['ga:date', 'ga:hour', 'ga:sessions', 'ga:pageviews']
-    num_records = 1000 # should have 1000 records for test dataset.
+    num_columns = 4  # ['ga:date', 'ga:hour', 'ga:sessions', 'ga:pageviews']
+    num_records = 1000  # should have 1000 records for test dataset.
     assert len(data.total) == num_records
     assert len(data.total.T) == num_columns
 
 
 def test_googleanalytics_data_summary(data):
-    expected_summry_df = pd.DataFrame([['1000','1000','1000','1000'],['98','24','10','14'],['20160223','16','1','1'],['20','66','577','483']])
+    expected_summry_df = pd.DataFrame([['1000', '1000', '1000', '1000'],
+                                       ['98', '24', '10', '14'],
+                                       ['20160223', '16', '1', '1'],
+                                       ['20', '66', '577', '483']])
     expected_summry_df.index = ['count', 'unique', 'top', 'freq']
     expected_summry_df.columns = ['date', 'hour', 'sessions', 'pageiews']
 
