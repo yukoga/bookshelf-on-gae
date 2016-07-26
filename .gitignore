@@ -39,4 +39,4 @@ lib/
 
 # credentials.
 *.p12
-
+.ipynb_checkpoints/
